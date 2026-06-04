@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="utf-8">
+    <title>تجمع الأحساء الصحي - التقرير التحليلي الشامل للأقسام (يناير - مايو 2026)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg: #f8fafc; --card: #ffffff; --text: #0f172a; --primary: #1e293b; --sec: #4f46e5; --accent: #10b981; }
+        body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; padding: 0; color: var(--text); line-height: 1.7; }
+        * { box-sizing: border-box; }
+        .header { background: linear-gradient(135deg, #1e293b, #0f172a); padding: 30px 40px; text-align: center; color: white; border-bottom: 5px solid var(--sec); }
+        .header h1 { margin: 0; font-weight: 900; font-size: 28px; }
+        .header p { margin: 10px 0 0; color: #cbd5e1; font-weight: 600; }
+        
+        .tabs { display: flex; justify-content: center; gap: 15px; margin: 30px 0; flex-wrap: wrap; padding: 0 20px; }
+        .tab-btn { background: #fff; border: 1px solid #cbd5e1; padding: 12px 30px; border-radius: 30px; font-family: 'Cairo'; font-weight: 800; font-size: 16px; cursor: pointer; transition: all 0.3s; color: #475569; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .tab-btn.active, .tab-btn:hover { background: var(--sec); color: #fff; border-color: var(--sec); transform: translateY(-2px); box-shadow: 0 6px 12px rgba(79, 70, 229, 0.2); }
+        
+        .tab-content { display: none; padding: 0 40px 40px; max-width: 1400px; margin: 0 auto; animation: fadeIn 0.5s; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .section-title { background: #f1f5f9; padding: 12px 20px; border-right: 6px solid var(--sec); border-radius: 8px; margin: 40px 0 25px; color: var(--primary); font-weight: 900; font-size: 22px; display: flex; justify-content: space-between; align-items: center; }
+        .section-title span { font-size: 14px; font-weight: 700; background: var(--sec); color: white; padding: 4px 12px; border-radius: 20px; }
+        
+        /* Aggregated Cards */
+        .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .card { background: var(--card); border-radius: 15px; padding: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; text-align: center; transition: transform 0.3s; position: relative; overflow: hidden; }
+        .card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; }
+        .card.blue::before { background: #3b82f6; }
+        .card.green::before { background: #10b981; }
+        .card.orange::before { background: #f59e0b; }
+        .card.red::before { background: #ef4444; }
+        
+        .card:hover { transform: translateY(-5px); box-shadow: 0 12px 20px -5px rgba(0,0,0,0.08); }
+        .card h3 { margin: 0 0 10px 0; color: #64748b; font-size: 17px; font-weight: 800; }
+        .card .val { font-size: 40px; font-weight: 900; line-height: 1.2; }
+        .card .desc { font-size: 14px; color: #94a3b8; font-weight: 600; margin-top: 5px; }
+
+        /* Departments Grid */
+        .dept-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 25px; margin-top: 10px; }
+        .dept-card { background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.02); transition: all 0.3s; display: flex; flex-direction: column; }
+        .dept-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.08); border-color: #cbd5e1; }
+        
+        .dept-header { padding: 15px 20px; font-weight: 900; font-size: 18px; color: #fff; display: flex; align-items: center; justify-content: space-between; }
+        .dept-header.electric { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .dept-header.hvac { background: linear-gradient(135deg, #0ea5e9, #0284c7); }
+        .dept-header.mechanic { background: linear-gradient(135deg, #64748b, #475569); }
+        .dept-header.electronic { background: linear-gradient(135deg, #10b981, #059669); }
+        .dept-header.civil { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+        
+        .dept-body { padding: 20px; flex-grow: 1; }
+        .dept-stats { display: flex; justify-content: space-between; border-bottom: 2px dashed #f1f5f9; padding-bottom: 15px; margin-bottom: 15px; text-align: center; }
+        .dept-stat-item { flex: 1; }
+        .dept-stat-item:not(:last-child) { border-left: 1px solid #e2e8f0; }
+        .dept-stat-item h5 { margin: 0; color: #64748b; font-size: 12px; font-weight: 800; text-transform: uppercase; }
+        .dept-stat-item span { display: block; font-size: 22px; font-weight: 900; color: var(--primary); margin-top: 5px; }
+        
+        .dept-body h6 { font-size: 15px; color: var(--sec); margin: 0 0 10px 0; font-weight: 800; }
+        .dept-body ul { padding-right: 20px; margin: 0; font-size: 14px; color: #334155; }
+        .dept-body li { margin-bottom: 8px; font-weight: 600; }
+        .dept-body li strong { color: var(--primary); font-weight: 800; }
+        
+        .highlight { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 12px; font-weight: 900; margin-right: 5px; }
+        .bg-red { background: #fee2e2; color: #b91c1c; }
+        .bg-green { background: #dcfce3; color: #10b981; }
+        .bg-blue { background: #dbeafe; color: #1d4ed8; }
+        .bg-yellow { background: #fef3c7; color: #d97706; }
+
+        @media (max-width: 768px) { .grid-4 { grid-template-columns: 1fr 1fr; } .dept-container { grid-template-columns: 1fr; } }
+        @media (max-width: 480px) { .grid-4 { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>تجمع الأحساء الصحي | مستشفى الملك فهد بالهفوف | الإدارة العامة للصيانة غير الطبية</h1>
+        <p>التقرير التحليلي المجمع للأداء التشغيلي حسب الأقسام (يناير - مايو 2026)</p>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="openTab('jan', this)">يناير 2026</button>
+        <button class="tab-btn" onclick="openTab('feb', this)">فبراير 2026</button>
+        <button class="tab-btn" onclick="openTab('mar', this)">مارس 2026</button>
+        <button class="tab-btn" onclick="openTab('apr', this)">أبريل 2026</button>
+        <button class="tab-btn" onclick="openTab('may', this)">مايو 2026</button>
+    </div>
+
+    <!-- ==================== شهر يناير ==================== -->
+    <div id="jan" class="tab-content active">
+        <h2 class="section-title">الملخص المجمع - يناير 2026 <span>نتائج جميع الأقسام</span></h2>
+        <div class="grid-4">
+            <div class="card blue">
+                <h3>إجمالي المهام المنجزة</h3>
+                <div class="val" style="color: #3b82f6;">1,750</div>
+                <div class="desc">المهام الكلية</div>
+            </div>
+            <div class="card green">
+                <h3>معدل الإنجاز العام</h3>
+                <div class="val" style="color: #10b981;">92.5%</div>
+                <div class="desc">متوسط الإنجاز لجميع الأقسام</div>
+            </div>
+            <div class="card orange">
+                <h3>الصيانة الوقائية (PPM)</h3>
+                <div class="val" style="color: #f59e0b;">51%</div>
+                <div class="desc">متوسط الجهد الوقائي الكلي</div>
+            </div>
+            <div class="card red">
+                <h3>الأعمال المعلقة</h3>
+                <div class="val" style="color: #ef4444;">7.5%</div>
+                <div class="desc">تأخير بسبب المواد واللوجستيات</div>
+            </div>
+        </div>
+
+        <h2 class="section-title">تحليل الأداء التفصيلي لكل قسم - يناير 2026</h2>
+        <div class="dept-container">
+            <!-- الكهرباء -->
+            <div class="dept-card">
+                <div class="dept-header electric">⚡ قسم الكهرباء</div>
+                <div class="dept-body">
+                    <div class="dept-stats">
+                        <div class="dept-stat-item"><h5>المهام</h5><span>500</span></div>
+                        <div class="dept-stat-item"><h5>الإنجاز</h5><span style="color:#10b981;">91.6%</span></div>
+                        <div class="dept-stat-item"><h5>الطوارئ</h5><span style="color:#ef4444;">54.6%</span></div>
+                    </div>
+                    <h6>أبرز التحليلات:</h6>
+                    <ul>
+                        <li><strong>الضغط التشغيلي:</strong> 95% من أوامر العمل تقع على الشفت (A).</li>
+                        <li><strong>المواقع المستنزفة:</strong> مبنى المستشفى يستنزف 65.1% من موارد القسم.</li>
+                        <li><strong>التوصيات:</strong> الانتقال للاستباقية، الفحص يجب أن يشمل قياس (الأمبير، الاهتزاز).</li>
+                    </ul>
+                </div>
+            </div>
+            <!-- الإلكترونيات -->
+            <div class="dept-card">
+                <div class="dept-header electronic">🔌 قسم الإلكترونيات</div>
+                <div class="dept-body">
+                    <div class="dept-stats">
+                        <div class="dept-stat-item"><h5>المهام</h5><span>150</span></div>
+                        <div class="dept-stat-item"><h5>الإنجاز</h5><span style="color:#10b981;">95.0%</span></div>
+                        <div class="dept-stat-item"><h5>وقائي</h5><span style="color:#f59e0b;">40%</span></div>
+                    </div>
+                    <h6>أبرز التحليلات:</h6>
+                    <ul>
+                        <li><strong>طبيعة العمل:</strong> تركيز عالي على أنظمة الاستدعاء وكاميرات المراقبة.</li>
+                        <li><strong>كفاءة الاستجابة:</strong> سرعة عالية في الإغلاق للأعطال الخفيفة.</li>
+                        <li><strong>التوصيات:</strong> جدولة فحص استباقي لأنظمة الحريق في العيادات الخارجية.</li>
+                    </ul>
+                </div>
+            </div>
+            <!-- الميكانيكا -->
+            <div class="dept-card">
+                <div class="dept-header mechanic">⚙️ قسم الميكانيكا</div>
+                <div class="dept-body">
+                    <div class="dept-stats">
+                        <div class="dept-stat-item"><h5>المهام</h5><span>400</span></div>
+                        <div class="dept-stat-item"><h5>الإنجاز</h5><span style="color:#10b981;">89.0%</span></div>
+                        <div class="dept-stat-item"><h5>الغازات</h5><span style="color:#3b82f6;">40%</span></div>
+                    </div>
+                    <h6>أبرز التحليلات:</h6>
+                    <ul>
+                        <li><strong>الأنظمة الحرجة:</strong> الغازات الطبية استحوذت على 40% من الإشغال بجهد كثيف جداً.</li>
+                        <li><strong>التحديات:</strong> انتظار قطع الغيار للمضخات الرئيسية.</li>
+                        <li><strong>التوصيات:</strong> توفير مخزون استراتيجي لقطع الغيار للأنظمة الحساسة.</li>
+                    </ul>
+                </div>
+            </div>
+            <!-- التكييف -->
+            <div class="dept-card">
+                <div class="dept-header hvac">❄️ قسم التكييف</div>
+                <div class="dept-body">
+                    <div class="dept-stats">
+                        <div class="dept-stat-item"><h5>المهام</h5><span>450</span></div>
+                        <div class="dept-stat-item"><h5>الإنجاز</h5><span style="color:#10b981;">93.5%</span></div>
+                        <div class="dept-stat-item"><h5>وقائي</h5><span style="color:#f59e0b;">55%</span></div>
+                    </div>
+                    <h6>أبرز التحليلات:</h6>
+                    <ul>
+                        <li><strong>المواقع المستنزفة:</strong> مبنى المستشفى الرئيسي، الطوارئ.</li>
+                        <li><strong>الأداء:</strong> إنجاز عالي في الصيانة الدورية لأنظمة التكييف.</li>
+                        <li><strong>التوصيات:</strong> تقييم وحدات المناولة الكبيرة (AHU) التي تحتاج استبدال.</li>
+                    </ul>
+                </div>
+            </div>
+            <!-- المدني -->
+            <div class="dept-card">
+                <div class="dept-header civil">🏗️ القسم المدني</div>
+                <div class="dept-body">
+                    <div class="dept-stats">
+                        <div class="dept-stat-item"><h5>المهام</h5><span>250</span></div>
+                        <div class="dept-stat-item"><h5>الإنجاز</h5><span style="color:#10b981;">94.0%</span></div>
+                        <div class="dept-stat-item"><h5>عامة</h5><span style="color:#3b82f6;">70%</span></div>
+                    </div>
+                    <h6>أبرز التحليلات:</h6>
+                    <ul>
+                        <li><strong>طبيعة العمل:</strong> الغالبية أعمال سباكة ونجارة ودهانات ترميمية.</li>
+                        <li><strong>التحديات:</strong> كثرة بلاغات تسريب المياه في سكن العازبات.</li>
+                        <li><strong>التوصيات:</strong> استبدال شبكات السباكة القديمة في السكن لخفض الطوارئ.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== شهر فبراير ==================== -->
+    <div id="feb" class="tab-content">
+        <h2 class="section-title">الملخص المجمع - فبراير 2026 <span>نتائج جميع الأقسام</span></h2>
+        <div class="grid-4">
+            <div class="card blue">
+                <h3>إجمالي المهام المنجزة</h3>
+                <div class="val" style="color: #3b82f6;">1,680</div>
+                <div class="desc">المهام الكلية</div>
+            </div>
+            <div class="card green">
+                <h3>معدل الإنجاز العام</h3>
+                <div class="val" style="color: #10b981;">94.2%</div>
+                <div class="desc">تحسن إيجابي عن الشهر السابق</div>
+            </div>
+            <div class="card orange">
+                <h3>الصيانة الوقائية (PPM)</h3>
+                <div class="val" style="color: #f59e0b;">58%</div>
+                <div class="desc">تطور ملحوظ في الخطة الاستباقية</div>
+            </div>
+            <div class="card red">
+                <h3>الأعمال المعلقة</h3>
+                <div class="val" style="color: #ef4444;">5.8%</div>
+                <div class="desc">نسبة انخفاض جيدة</div>
+            </div>
+        </div>
+
+        <h2 class="section-title">تحليل الأداء التفصيلي لكل قسم - فبراير 2026</h2>
+        <div class="dept-container">
+            <div class="dept-card">
+                <div class="dept-header electronic">🔌 قسم الإلكترونيات</div>
+                <div class="dept-body">
+                    <div class="dept-stats">
+                        <div class="dept-stat-item"><h5>المهام</h5><span>165</span></div>
+                        <div class="dept-stat-item"><h5>الإنجاز</h5><span style="color:#10b981;">97.7%</span></div>
+                        <div class="dept-stat-item"><h5>كفاءة</h5><span style="color:#3b82f6;">عالية</span></div>
+                    </div>
+                    <h6>أبرز التحليلات:</h6>
+                    <ul>
+                        <li><strong>مؤشر الأداء:</strong> كفاءة تشغيلية ممتازة، غالبية المهام "تم الإنجاز".</li>
+                        <li><strong>التوصيات:</strong> تدريب فنيي الصف الثاني لتخفيف العبء عن الكفاءات المتميزة.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="dept-card">
+                <div class="dept-header hvac">❄️ قسم التكييف</div>
+                <div class="dept-body">
+                    <div class="dept-stats">
+                        <div class="dept-stat-item"><h5>المهام</h5><span>420</span></div>
+                        <div class="dept-stat-item"><h5>الإنجاز</h5><span style="color:#10b981;">100%</span></div>
+                        <div class="dept-stat-item"><h5>الطوارئ</h5><span style="color:#ef4444;">78%</span></div>
+                    </div>
+                    <h6>أبرز التحليلات:</h6>
+                    <ul>
+                        <li><strong>تحدي استراتيجي:</strong> يعاني من ارتفاع نسبة الصيانة الطارئة (<span class="highlight bg-red">78%</span>).</li>
+                        <li><strong>المواقع المستنزفة:</strong> مبنى المستشفى 55%، الطوارئ 25%.</li>
+                        <li><strong>التوصيات:</strong> خطة صيانة وقائية مكثفة جداً للحد من الأعطال المفاجئة قبل دخول الصيف.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="dept-card">
+                <div class="dept-header electric">⚡ قسم الكهرباء</div>
+                <div class="dept-body">
+                    <div class="dept-stats">
+                        <div class="dept-stat-item"><h5>المهام</h5><span>480</span></div>
+                        <div class="dept-stat-item"><h5>الإنجاز</h5><span style="color:#10b981;">93.1%</span></div>
+                        <div class="dept-stat-item"><h5>وقائي</h5><span style="color:#f59e0b;">60%</span></div>
+                    </div>
+                    <h6>أبرز التحليلات:</h6>
+                    <ul>
+                        <li><strong>التحسن:</strong> ارتفاع نسبة الجولات الوقائية وتطبيق نظام المجموعات بشكل أفضل.</li>
+                        <li><strong>الجهد:</strong> الغالبية العظمى للمهام تطلبت جهداً متوسطاً.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="dept-card">
+                <div class="dept-header mechanic">⚙️ قسم الميكانيكا</div>
+                <div class="dept-body">
+                    <div class="dept-stats">
+                        <div class="dept-stat-item"><h5>المهام</h5><span>320</span></div>
+                        <div class="dept-stat-item"><h5>الإنجاز</h5><span style="color:#10b981;">92.0%</span></div>
+                        <div class="dept-stat-item"><h5>مواد</h5><span style="color:#ef4444;">12%</span></div>
+                    </div>
+                    <h6>أبرز التحليلات:</h6>
+                    <ul>
+                        <li><strong>الاستقرار:</strong> أداء متوازن، مع تأخر طفيف بسبب توريد القطع الميكانيكية للغلايات.</li>
+                        <li><strong>إدارة الأصول:</strong> تصنيف محطات المياه كمواقع حرجة ذات أولوية.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="dept-card">
+                <div class="dept-header civil">🏗️ القسم المدني</div>
+                <div class="dept-body">
+                    <div class="dept-stats">
+                        <div class="dept-stat-item"><h5>المهام</h5><span>295</span></div>
+                        <div class="dept-stat-item"><h5>الإنجاز</h5><span style="color:#10b981;">95.5%</span></div>
+                        <div class="dept-stat-item"><h5>وقائي</h5><span style="color:#f59e0b;">30%</span></div>
+                    </div>
+                    <h6>أبرز التحليلات:</h6>
+                    <ul>
+                        <li><strong>البنية التحتية:</strong> تقييم البنية التحتية لسكن العازبات لتحديد سبب الأعطال المتكررة (كما أوصي في يناير).</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== شهر مارس ==================== -->
+    <div id="mar" class="tab-content">
+        <h2 class="section-title">الملخص المجمع - مارس 2026 <span>نتائج جميع الأقسام</span></h2>
+        <div class="grid-4">
+            <div class="card blue">
+                <h3>إجمالي المهام المنجزة</h3>
+                <div class="val" style="color: #3b82f6;">1,850</div>
+                <div class="desc">المهام الكلية</div>
+            </div>
+            <div class="card green">
+                <h3>معدل الإنجاز العام</h3>
+                <div class="val" style="color: #10b981;">96.5%</div>
+                <div class="desc">استقرار تنفيذي ممتاز</div>
+            </div>
+            <div class="card orange">
+                <h3>الصيانة الوقائية (PPM)</h3>
+                <div class="val" style="color: #f59e0b;">62%</div>
+                <div class="desc">التزام واسع بالصيانة المجدولة</div>
+            </div>
+            <div class="card red">
+                <h3>الأعمال المعلقة</h3>
+                <div class="val" style="color: #ef4444;">3.5%</div>
+                <div class="desc">انخفاض قياسي لانتظار المواد</div>
+            </div>
+        </div>
+
+        <h2 class="section-title">تحليل الأداء التفصيلي لكل قسم - مارس 2026</h2>
+        <div class="dept-container">
+            <div class="dept-card">
+                <div class="dept-header mechanic">⚙️ قسم الميكانيكا</div>
+                <div class="dept-body">
+                    <div class="dept-stats">
+                        <div class="dept-stat-item"><h5>المهام</h5><span>302</span></div>
+                        <div class="dept-stat-item"><h5>الإنجاز</h5><span style="color:#10b981;">99.0%</span></div>
+                        <div class="dept-stat-item"><h5>أولوية</h5><span style="color:#ef4444;">70%</span></div>
+                    </div>
+                    <h6>أبرز التحليلات:</h6>
+                    <ul>
+                        <li><strong>توزيع الجهد:</strong> الغازات الطبية 30%، محطات المياه 21%.</li>
+                        <li><strong>التركز الجغرافي:</strong> المرافق (42%) ثم مبنى المستشفى (25%).</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="dept-card">
+                <div class="dept-header electronic">🔌 قسم الإلكترونيات</div>
+                <div class="dept-body">
+                    <div class="dept-stats">
+                        <div class="dept-stat-item"><h5>المهام</h5><span>102</span></div>
+                        <div class="dept-stat-item"><h5>الإنجاز</h5><span style="color:#10b981;">97.0%</span></div>
+                        <div class="dept-stat-item"><h5>وقائي</h5><span style="color:#f59e0b;">56%</span></div>
+                    </div>
+                    <h6>أبرز التحليلات:</h6>
+                    <ul>
+                        <li><strong>توزيع المهام:</strong> صيانة وقائية 56%، صيانة عامة 32%.</li>
+                        <li><strong>التركز الجغرافي:</strong> مبنى المستشفى 38%، منطقة المرافق 17.5%.</li>
+                        <li><strong>مستوى الجهد:</strong> 82% من المهام متوسطة الأولوية والجهد.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="dept-card">
+                <div class="dept-header hvac">❄️ قسم التكييف</div>
+                <div class="dept-body">
+                    <div class="dept-stats">
+                        <div class="dept-stat-item"><h5>المهام</h5><span>480</span></div>
+                        <div class="dept-stat-item"><h5>الإنجاز</h5><span style="color:#10b981;">95.5%</span></div>
+                        <div class="dept-stat-item"><h5>الطوارئ</h5><span style="color:#ef4444;">65%</span></div>
+                    </div>
+                    <h6>أبرز التحليلات:</h6>
+                    <ul>
+                        <li><strong>الأداء:</strong> انخفاض نسبي في الأعطال الطارئة مقارنة بفبراير نتيجة التدخل الوقائي.</li>
+                        <li><strong>التوصيات:</strong> التركيز على شيلرات المستشفى لضمان كفاءتها قبل أبريل.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="dept-card">
+                <div class="dept-header electric">⚡ قسم الكهرباء</div>
+                <div class="dept-body">
+                    <div class="dept-stats">
+                        <div class="dept-stat-item"><h5>المهام</h5><span>500</span></div>
+                        <div class="dept-stat-item"><h5>الإنجاز</h5><span style="color:#10b981;">96.0%</span></div>
+                        <div class="dept-stat-item"><h5>معلق</h5><span style="color:#f59e0b;">4%</span></div>
+                    </div>
+                    <h6>أبرز التحليلات:</h6>
+                    <ul>
+                        <li><strong>الاستقرار:</strong> استقرار كبير في معدلات التغذية والمحولات. تغطية ممتازة للوقائي.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="dept-card">
+                <div class="dept-header civil">🏗️ القسم المدني</div>
+                <div class="dept-body">
+                    <div class="dept-stats">
+                        <div class="dept-stat-item"><h5>المهام</h5><span>466</span></div>
+                        <div class="dept-stat-item"><h5>الإنجاز</h5><span style="color:#10b981;">98.0%</span></div>
+                        <div class="dept-stat-item"><h5>تجديد</h5><span style="color:#3b82f6;">40%</span></div>
+                    </div>
+                    <h6>أبرز التحليلات:</h6>
+                    <ul>
+                        <li><strong>الجهد:</strong> ارتفاع عدد المهام بسبب البدء في أعمال ترميم مجدولة (تجديد) للمرافق.</li>
+                        <li><strong>التوصيات:</strong> الإسراع في توفير المواد الإنشائية لضمان عدم التأخر في الإنجاز.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== شهر أبريل ==================== -->
+    <div id="apr" class="tab-content">
+        <h2 class="section-title">الملخص المجمع - أبريل 2026 <span>نتائج جميع الأقسام</span></h2>
+        <div class="grid-4">
+            <div class="card blue">
+                <h3>إجمالي المهام المنجزة</h3>
+                <div class="val" style="color: #3b82f6;">2,056</div>
+                <div class="desc">إجمالي المهام المرفوعة ميدانياً</div>
+            </div>
+            <div class="card green">
+                <h3>نسبة الإنجاز الميداني</h3>
+                <div class="val" style="color: #10b981;">98.2%</div>
+                <div class="desc">التزام بنسبة 94.2% بالـ SLA</div>
+            </div>
+            <div class="card orange">
+                <h3>كفاءة الإصلاح (MTTR)</h3>
+                <div class="val" style="color: #f59e0b;">1.8 س</div>
+                <div class="desc">متوسط زمن الإصلاح الفعلي</div>
+            </div>
+            <div class="card red">
+                <h3>اختناقات الإمداد</h3>
+                <div class="val" style="color: #ef4444;">12.5%</div>
+                <div class="desc">مهام بانتظار قطع الغيار</div>
+            </div>
+        </div>
+
+        <h2 class="section-title">تحليل الأداء التفصيلي لكل قسم - أبريل 2026</h2>
+        <div class="dept-container">
+            <div class="dept-card">
+                <div class="dept-header hvac">❄️ قسم التكييف</div>
+                <div class="dept-body">
+                    <div class="dept-stats">
+                        <div class="dept-stat-item"><h5>المهام</h5><span>620</span></div>
+                        <div class="dept-stat-item"><h5>الإنجاز</h5><span style="color:#10b981;">96.5%</span></div>
+                        <div class="dept-stat-item"><h5>زيادة أعطال</h5><span style="color:#ef4444;">+35%</span></div>
+                    </div>
+                    <h6>أبرز التحليلات:</h6>
+                    <ul>
+                        <li><strong>التحديات:</strong> ارتفاع البلاغات بنسبة 35% بسبب دخول الصيف، متوافق مع التنبؤات.</li>
+                        <li><strong>التمركز:</strong> تمركزت الفرق بشكل استباقي في مبنى الطوارئ والمستشفى، مما قلل MTTR.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="dept-card">
+                <div class="dept-header mechanic">⚙️ قسم الميكانيكا</div>
+                <div class="dept-body">
+                    <div class="dept-stats">
+                        <div class="dept-stat-item"><h5>المهام</h5><span>450</span></div>
+                        <div class="dept-stat-item"><h5>الإنجاز</h5><span style="color:#10b981;">97.8%</span></div>
+                        <div class="dept-stat-item"><h5>وقائي</h5><span style="color:#f59e0b;">65%</span></div>
+                    </div>
+                    <h6>أبرز التحليلات:</h6>
+                    <ul>
+                        <li><strong>الإنتاجية:</strong> تصدر القسم من حيث حجم الإنجاز الميداني الفعلي والمهام المنفذة ضمن المعيار.</li>
+                        <li><strong>الجهد:</strong> ضغط عالي في صيانة محطات الضخ.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="dept-card">
+                <div class="dept-header electric">⚡ قسم الكهرباء</div>
+                <div class="dept-body">
+                    <div class="dept-stats">
+                        <div class="dept-stat-item"><h5>المهام</h5><span>510</span></div>
+                        <div class="dept-stat-item"><h5>الإنجاز</h5><span style="color:#10b981;">98.5%</span></div>
+                        <div class="dept-stat-item"><h5>MTTR</h5><span style="color:#3b82f6;">1.2 س</span></div>
+                    </div>
+                    <h6>أبرز التحليلات:</h6>
+                    <ul>
+                        <li><strong>الكفاءة:</strong> أسرع قسم في زمن الإصلاح الفعلي (MTTR).</li>
+                        <li><strong>استقرار تام:</strong> لا يوجد أعطال حرجة أثرت على الخدمات.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="dept-card">
+                <div class="dept-header electronic">🔌 قسم الإلكترونيات</div>
+                <div class="dept-body">
+                    <div class="dept-stats">
+                        <div class="dept-stat-item"><h5>المهام</h5><span>186</span></div>
+                        <div class="dept-stat-item"><h5>الإنجاز</h5><span style="color:#10b981;">100%</span></div>
+                        <div class="dept-stat-item"><h5>وقائي</h5><span style="color:#f59e0b;">70%</span></div>
+                    </div>
+                    <h6>أبرز التحليلات:</h6>
+                    <ul>
+                        <li><strong>التميز:</strong> إغلاق كافة الأوامر بدون أي تعليق أو انتظار لمواد.</li>
+                        <li><strong>التوجه:</strong> 70% من جهود القسم كانت موجهة للصيانة الوقائية.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="dept-card">
+                <div class="dept-header civil">🏗️ القسم المدني</div>
+                <div class="dept-body">
+                    <div class="dept-stats">
+                        <div class="dept-stat-item"><h5>المهام</h5><span>290</span></div>
+                        <div class="dept-stat-item"><h5>الإنجاز</h5><span style="color:#10b981;">97.0%</span></div>
+                        <div class="dept-stat-item"><h5>مواد</h5><span style="color:#ef4444;">18%</span></div>
+                    </div>
+                    <h6>أبرز التحليلات:</h6>
+                    <ul>
+                        <li><strong>التحديات:</strong> استحوذ القسم المدني على النسبة الأكبر من اختناقات الإمداد وانتظار المواد.</li>
+                        <li><strong>التوصيات:</strong> تسريع وتيرة شراء المواد الاستهلاكية (سباكة/نجارة).</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== شهر مايو ==================== -->
+    <div id="may" class="tab-content">
+        <h2 class="section-title">الملخص المجمع - مايو 2026 <span>نتائج جميع الأقسام</span></h2>
+        <div class="grid-4">
+            <div class="card blue">
+                <h3>إجمالي المهام المنجزة</h3>
+                <div class="val" style="color: #3b82f6;">2,057</div>
+                <div class="desc">حجم عمل مكثف ومستقر</div>
+            </div>
+            <div class="card green">
+                <h3>نسبة الإنجاز الميداني</h3>
+                <div class="val" style="color: #10b981;">94.8%</div>
+                <div class="desc">التزام بنسبة 94.8% بالـ SLA</div>
+            </div>
+            <div class="card orange">
+                <h3>كفاءة الإصلاح (MTTR)</h3>
+                <div class="val" style="color: #f59e0b;">1.4 س</div>
+                <div class="desc">تحسن ملحوظ في سرعة الإنجاز</div>
+            </div>
+            <div class="card red">
+                <h3>اختناقات الإمداد</h3>
+                <div class="val" style="color: #ef4444;">10.3%</div>
+                <div class="desc">تراجع إيجابي في انتظار المواد</div>
+            </div>
+        </div>
+
+        <h2 class="section-title">تحليل الأداء التفصيلي لكل قسم - مايو 2026</h2>
+        <div class="dept-container">
+            <div class="dept-card">
+                <div class="dept-header hvac">❄️ قسم التكييف</div>
+                <div class="dept-body">
+                    <div class="dept-stats">
+                        <div class="dept-stat-item"><h5>المهام</h5><span>680</span></div>
+                        <div class="dept-stat-item"><h5>الإنجاز</h5><span style="color:#10b981;">92.5%</span></div>
+                        <div class="dept-stat-item"><h5>طوارئ إضافية</h5><span style="color:#ef4444;">+37%</span></div>
+                    </div>
+                    <h6>أبرز التحليلات:</h6>
+                    <ul>
+                        <li><strong>ذروة العمل:</strong> توالي البلاغات الطارئة بزيادة 37% إضافية بسبب الارتفاع المستمر في الحرارة.</li>
+                        <li><strong>الإجهاد:</strong> ضغط شديد على طواقم التكييف أثر طفيفاً على نسبة الإنجاز العامة.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="dept-card">
+                <div class="dept-header mechanic">⚙️ قسم الميكانيكا</div>
+                <div class="dept-body">
+                    <div class="dept-stats">
+                        <div class="dept-stat-item"><h5>المهام</h5><span>470</span></div>
+                        <div class="dept-stat-item"><h5>الإنجاز</h5><span style="color:#10b981;">96.0%</span></div>
+                        <div class="dept-stat-item"><h5>وقائي</h5><span style="color:#f59e0b;">71%</span></div>
+                    </div>
+                    <h6>أبرز التحليلات:</h6>
+                    <ul>
+                        <li><strong>التميز الوقائي:</strong> ارتفاع ممتاز لنسبة الصيانة الوقائية (PPM) لتصل إلى 71% من مهام القسم.</li>
+                        <li><strong>التركز الجغرافي:</strong> استنزاف عالي مستمر في مبنى المستشفى والطوارئ.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="dept-card">
+                <div class="dept-header civil">🏗️ القسم المدني</div>
+                <div class="dept-body">
+                    <div class="dept-stats">
+                        <div class="dept-stat-item"><h5>المهام</h5><span>390</span></div>
+                        <div class="dept-stat-item"><h5>الإنجاز</h5><span style="color:#10b981;">94.0%</span></div>
+                        <div class="dept-stat-item"><h5>استنزاف</h5><span style="color:#ef4444;">عالي</span></div>
+                    </div>
+                    <h6>أبرز التحليلات:</h6>
+                    <ul>
+                        <li><strong>تحليل جذري:</strong> استنزاف عالي للجهد في "سكن العازبات" ومبنى المستشفى (أعمال نجارة وسباكة).</li>
+                        <li><strong>التوصيات:</strong> عمل حملة صيانة مجدولة شاملة لتقليل الأعطال الفردية.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="dept-card">
+                <div class="dept-header electric">⚡ قسم الكهرباء</div>
+                <div class="dept-body">
+                    <div class="dept-stats">
+                        <div class="dept-stat-item"><h5>المهام</h5><span>367</span></div>
+                        <div class="dept-stat-item"><h5>الإنجاز</h5><span style="color:#10b981;">98.0%</span></div>
+                        <div class="dept-stat-item"><h5>SLA</h5><span style="color:#3b82f6;">99%</span></div>
+                    </div>
+                    <h6>أبرز التحليلات:</h6>
+                    <ul>
+                        <li><strong>التزام قوي:</strong> التزام شبه تام بمعايير SLA في إغلاق البلاغات.</li>
+                        <li><strong>الاعتمادية:</strong> كفاءة عالية في التعامل مع المولدات الاحتياطية وأنظمة UPS.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="dept-card">
+                <div class="dept-header electronic">🔌 قسم الإلكترونيات</div>
+                <div class="dept-body">
+                    <div class="dept-stats">
+                        <div class="dept-stat-item"><h5>المهام</h5><span>150</span></div>
+                        <div class="dept-stat-item"><h5>الإنجاز</h5><span style="color:#10b981;">99.0%</span></div>
+                        <div class="dept-stat-item"><h5>استقرار</h5><span style="color:#3b82f6;">ممتاز</span></div>
+                    </div>
+                    <h6>أبرز التحليلات:</h6>
+                    <ul>
+                        <li><strong>استدامة:</strong> مسار عمل هادئ ومستقر جداً، مع التركيز على كاميرات المراقبة وأنظمة الاستدعاء.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openTab(tabName, element) {
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+            const btns = document.querySelectorAll('.tab-btn');
+            btns.forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            element.classList.add('active');
+        }
+    </script>
+</body>
+</html>
